@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "363960307698",
+    "firebase_url": "https://safesteer-3b5e6-default-rtdb.firebaseio.com",
+    "project_id": "safesteer-3b5e6",
+    "storage_bucket": "safesteer-3b5e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363960307698:android:f85cf506869b876594656b",
+        "android_client_info": {
+          "package_name": "com.example.safeSteer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCws0J5HBAACiOxW-hqsiVZ6AJhK7YTk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363960307698:android:4551473b6cc16de494656b",
+        "android_client_info": {
+          "package_name": "com.example.safe_steer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCws0J5HBAACiOxW-hqsiVZ6AJhK7YTk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
