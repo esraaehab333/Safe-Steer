@@ -8,10 +8,9 @@ class NotificationService {
     AndroidInitializationSettings androidInitializationSettings =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true);
     var initalizationSettings = InitializationSettings(
       android: androidInitializationSettings,
       iOS: initializationSettingsIOS,
@@ -36,6 +35,7 @@ class NotificationService {
 
   Future showNotification(
       {int id = 0, String? title, String? body, String? payload}) async {
+    print("kkkkkkkkkkkkkkkk");
     return notificationsPlugin
         .show(id, title, body, await notificationDetails(), payload: payload);
   }

@@ -4,18 +4,17 @@ import 'package:safe_steer/constants/colors.dart';
 import 'package:safe_steer/screens/monitor_screen.dart';
 
 class CustomCarCard extends StatelessWidget {
-  const CustomCarCard({
-    super.key,
-    required this.carId,
-    required this.carName,
-    required this.healthText,
-    required this.heartbeat,
-    required this.speedValue,
-    required this.statusText,
-    required this.batteryValue,
-    this.speedLimit,
-    required this.keyId
-  });
+  const CustomCarCard(
+      {super.key,
+      required this.carId,
+      required this.carName,
+      required this.healthText,
+      required this.heartbeat,
+      required this.speedValue,
+      required this.statusText,
+      required this.batteryValue,
+      this.speedLimit,
+      required this.keyId});
   final String carName;
   final String carId;
   final String healthText;
@@ -27,7 +26,6 @@ class CustomCarCard extends StatelessWidget {
   final String keyId;
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: const EdgeInsets.all(10),
       child: Stack(
@@ -94,7 +92,7 @@ class CustomCarCard extends StatelessWidget {
                             heartbeat: heartbeat,
                             speedValue: speedValue,
                             battaryvalue: batteryValue,
-                            speedLimit : speedLimit,
+                            speedLimit: speedLimit,
                             keyId: keyId,
                           ),
                         ));

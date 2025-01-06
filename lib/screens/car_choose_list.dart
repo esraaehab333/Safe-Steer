@@ -1,20 +1,13 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
-import 'dart:async';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:safe_steer/constants/colors.dart';
 import 'package:safe_steer/screens/create_new_car.dart';
 import 'package:safe_steer/widgets/custom_car_card.dart';
 import 'package:safe_steer/widgets/custom_menu_drawer.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-import '../helper/notification_services.dart';
-List<dynamic> ids = [];
 class CarChooseList extends StatefulWidget {
   const CarChooseList({super.key});
   @override
@@ -22,90 +15,28 @@ class CarChooseList extends StatefulWidget {
 }
 
 class _CarChooseListState extends State<CarChooseList> {
-
-  final databaseRef = FirebaseDatabase.instance.ref('Cars');
-  late StreamSubscription<DatabaseEvent> _dataSubscription;
-  List<String> childrenIds = [];
-  final ScrollController controller = ScrollController();
-  late DatabaseReference ref;
-  Query dbref = FirebaseDatabase.instance.ref().child("Cars");
-
-  late StreamSubscription subscription;
-  bool isDeviceConnected = false;
-  bool isAlertSet = false;
+  late ScrollController _scrollController; // Define ScrollController
 
   @override
   void initState() {
     super.initState();
-    getConnectivity();
-    _listenForDataChanges();
+    _scrollController = ScrollController(); // Initialize ScrollController
   }
 
+  // Function to scroll to the top of the list
+  void scrollToTop() {
+    _scrollController.animateTo(
+      0.0, // Scroll to the top
+      duration: Duration(milliseconds: 500), // Animation duration
+      curve: Curves.easeInOut, // Animation curve
+    );
+  }
+
+  late DatabaseReference ref;
   @override
-  void dispose() {
-    subscription.cancel();
-    _dataSubscription.cancel();
-    super.dispose();
-  }
-
-  void _listenForDataChanges() {
-    _dataSubscription = databaseRef.onValue.listen((event) {
-      final dataSnapshot = event.snapshot;
-      final data = event.snapshot.value as Map;
-      childrenIds = dataSnapshot.children.map((child) => child.key!).toList();
-      for(int i=0;i<childrenIds.length;i++)
-      {
-
-        final carData = data[childrenIds[i]];
-        final carName = carData["Name"];
-        final speed = int.parse(carData["Speed"]);
-        final speedLimit = int.parse(carData["SpeedLimit"]);
-        final status = carData["Status"];
-        final health = carData["Health"];
-        final heartbeat = int.parse(carData["Heartbeat"]);
-
-        if(speed >= speedLimit)
-        {
-          NotificationService().showNotification(body: "Speed is high !!", title:carName, id: generateUniqueNotificationId(i, "Speed"),);
-        }
-        if(status == "Not Hold")
-        {
-          NotificationService().showNotification(body: "Please, hold the steering wheel.",title:carName,  id: generateUniqueNotificationId(i, "Status"),);
-        }
-        if(health =="Drunk" )
-        {
-          NotificationService().showNotification(body: "Please, don’t drive as you are drunk.",title:carName,  id: generateUniqueNotificationId(i, "Health"),);
-        }
-        if(heartbeat >=190 )
-        {
-          NotificationService().showNotification(body: "Please, Be calm and breathe.",title:carName, id: generateUniqueNotificationId(i, "Heartbeat"),);
-        }
-        // Update your UI with the new data
-        setState(() {
-          // Update your state variables
-        });
-      }
-    });
-  }
-
-  int generateUniqueNotificationId(int carIndex, String type) {
-    return carIndex * 10 + type.hashCode;
-  }
-
-  getConnectivity() =>
-      subscription = Connectivity().onConnectivityChanged.listen(
-            (ConnectivityResult result) async {
-          isDeviceConnected = await InternetConnectionChecker().hasConnection;
-          if (!isDeviceConnected && isAlertSet == false) {
-            showDialogBox();
-            setState(() => isAlertSet = true);
-          }
-        },
-      );
-  
+  Query dbref = FirebaseDatabase.instance.ref().child("Cars");
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: MYBlueGradiant3,
       appBar: AppBar(
@@ -167,13 +98,13 @@ class _CarChooseListState extends State<CarChooseList> {
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
                       onTap: () async {
-                         Navigator.push(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CreateNewCar(controller :controller),
+                            builder: (context) => CreateNewCar(),
                           ),
                         );
-                       // NotificationService().showNotification(title: "ll",id:1,body:"k",payload: "ll");
+                        // NotificationService().showNotification(title: "ll",id:1,body:"k",payload: "ll");
                       },
                       child: Container(
                         decoration: ShapeDecoration(
@@ -191,8 +122,8 @@ class _CarChooseListState extends State<CarChooseList> {
                           ],
                         ),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           child: Row(
                             children: [
                               Icon(Icons.add_rounded),
@@ -217,13 +148,11 @@ class _CarChooseListState extends State<CarChooseList> {
               Expanded(
                 child: FirebaseAnimatedList(
                   query: dbref,
-                  controller: controller,
+                  controller: _scrollController,
                   itemBuilder: (context, snapshot, animation, index) {
                     Map car = snapshot.value as Map;
                     car['Key'] = snapshot.key;
-                    ids.add(snapshot.key);
                     return CustomCarCard(
-                      keyId : snapshot.key!,
                       carId: car['Id'],
                       carName: car['Name'],
                       healthText: car['Health'],
@@ -232,8 +161,8 @@ class _CarChooseListState extends State<CarChooseList> {
                       speedValue: car['Speed'],
                       statusText: car['Status'],
                       speedLimit: car['SpeedLimit'],
+                      keyId: snapshot.key!,
                     );
-
                   },
                 ),
               ),
@@ -243,27 +172,4 @@ class _CarChooseListState extends State<CarChooseList> {
       ),
     );
   }
-
-  showDialogBox() => showCupertinoDialog<String>(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      title: const Text('No Connection'),
-      content: const Text('Please check your internet connectivity'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () async {
-            Navigator.pop(context, 'Cancel');
-            setState(() => isAlertSet = false);
-            isDeviceConnected =
-            await InternetConnectionChecker().hasConnection;
-            if (!isDeviceConnected && isAlertSet == false) {
-              showDialogBox();
-              setState(() => isAlertSet = true);
-            }
-          },
-          child: const Text('OK'),
-        ),
-      ],
-    ),
-  );
 }

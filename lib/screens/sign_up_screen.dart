@@ -6,10 +6,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:safe_steer/constants/colors.dart';
 import 'package:safe_steer/helper/show_snack_bar.dart';
+import 'package:safe_steer/screens/car_choose_list.dart';
 import 'package:safe_steer/screens/sign_in_screen.dart';
 import 'package:safe_steer/widgets/custom_lable_text_form_filed.dart';
+import 'package:safe_steer/widgets/upper_text_sign_up_screen.dart';
+import '../widgets/have_account_text.dart';
 import '../widgets/my_elevated_button.dart';
-import '../widgets/my_text_button.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -21,11 +23,12 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   GlobalKey<FormState> formKey = GlobalKey();
   bool isLoading = false;
-  String? email_singin;
-  String? password_singin;
-  String? phone_singin;
-  String? username_singin;
+  String? emailSignIn;
+  String? passwordSignIn;
+  String? phoneSignIn;
+  String? usernameSignIn;
   late DatabaseReference ref;
+
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
@@ -39,36 +42,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
               height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [MyBlack, MyBlueGradiant1, MyBlack],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter),
+                  colors: [MyBlack, MyBlueGradiant1, MyBlack],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Safe Steer",
-                    style: GoogleFonts.genos(
-                      fontSize: 48.sp,
-                      color: MyWhite,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  Text(
-                    "Welcome Back! You ‘ve been missed",
-                    style: GoogleFonts.inter(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w200,
-                      color: MyWhite,
-                    ),
-                  ),
+                  const UpperTextSignUpScreen(),
                   SizedBox(height: 14.h),
                   CustomLableTextFormFiled(
                     labelText: 'Username',
-                    hintText: 'enter your username',
+                    hintText: 'Enter your username',
                     onChanged: (data) => {
-                      username_singin = data,
-                      //_username = data,
+                      usernameSignIn = data,
                     },
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -80,9 +68,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   CustomLableTextFormFiled(
                     labelText: "Email",
-                    hintText: 'enter your email',
+                    hintText: 'Enter your email',
                     onChanged: (data) => {
-                      email_singin = data,
+                      emailSignIn = data,
                     },
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -108,22 +96,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return"Please enter password";
+                        return "Please enter password";
                       }
                       return null;
                     },
                     onChanged: (data) {
-                      password_singin = data;
+                      passwordSignIn = data;
                     },
                     labelText: "Password",
-                    hintText: "enter your password",
+                    hintText: "Enter your password",
                   ),
                   CustomLableTextFormFiled(
                     labelText: 'Phone',
-                    hintText: 'enter your phone number',
+                    hintText: 'Enter your phone number',
                     onChanged: (data) => {
-                      phone_singin = data,
-                      //_phone = data,
+                      phoneSignIn = data,
                     },
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -144,8 +131,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           try {
                             UserCredential user = await FirebaseAuth.instance
                                 .createUserWithEmailAndPassword(
-                                    email: email_singin!,
-                                    password: password_singin!);
+                                    email: emailSignIn!,
+                                    password: passwordSignIn!);
                             String Id = FirebaseAuth.instance.currentUser!.uid;
                             print("ID:$Id");
                             ref = FirebaseDatabase.instance.ref("Users/$Id");
@@ -153,8 +140,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 context, "Signing Up Successfully !!!");
                             Map<String, dynamic> users = {};
                             ref.set({
-                              "username": username_singin,
-                              "phone": phone_singin,
+                              "username": usernameSignIn,
+                              "phone": phoneSignIn,
                               "imageUrl": "assets/images/profile.png",
                             });
                             Navigator.pushReplacement(
@@ -175,11 +162,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             } else if (e.code == 'network-request-failed') {
                               showSnackBar(context, 'No internet connection');
                             } else {
-                              print(e);
                               showSnackBar(
                                   context, "An undefined Error happened.");
                             }
-                            showSnackBar(context, e.code);
                           } catch (e) {
                             showSnackBar(context, "error");
                           }
@@ -205,42 +190,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "have an account? ",
-                        style: GoogleFonts.georama(
-                          fontSize: 16,
-                          color: MyWhite,
-                          fontWeight: FontWeight.w100,
-                        ),
-                      ),
-                      MyTextButton(
-                        borderRadius: BorderRadius.zero,
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                              // LoginScreen(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          "Log in",
-                          style: GoogleFonts.georama(
-                            fontSize: 16,
-                            color: MyBlueText,
-                            fontWeight: FontWeight.w100,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const SizedBox(width: 5),
+                  const HaveAccount(),
                 ],
               ),
             ),

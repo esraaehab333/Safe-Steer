@@ -22,8 +22,8 @@ class _CustomHeartRateBoxState extends State<CustomHeartRateBox> {
   @override
   Widget build(BuildContext context) {
 
-    if (int.parse(widget.heartbeats) >=190  && !_showDialog) {
-      //NotificationService().showNotification(body: "Please, Be calm and breathe.",title:"High heart rate !!" ,id: 2);
+    if (int.parse(widget.heartbeats) <=190  && !_showDialog) {
+      NotificationService().showNotification(body: "Please, Be calm and breathe.",title:"High heart rate !!" ,id: 2);
       // Show the dialog only if the battery percentage is 20% and the dialog is not already shown
       _showDialog = true; // Update the state to prevent showing the dialog multiple times
       WidgetsBinding.instance!.addPostFrameCallback((_) {

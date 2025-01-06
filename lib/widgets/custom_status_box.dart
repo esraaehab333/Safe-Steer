@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,12 +20,9 @@ class _CustomStatusBoxState extends State<CustomStatusBox> {
   bool _showDialog = false;
   @override
   Widget build(BuildContext context) {
+
     if (widget.statustext =="Not Hold" && !_showDialog) {
-      /*FirebaseMessaging.instance.getInitialMessage().then((message) =>
-      message!.messageId!.isNotEmpty
-          ? print('we can now navigate to specific screen')
-          : print('there is no new notification so default screen will be shown when application start from terminated state'));*/
-      //NotificationService().showNotification(body: "Please, hold the steering wheel.",title:"Steering wheel is loose !!",id: 4 );
+      NotificationService().showNotification(body: "Please, hold the steering wheel.",title:"Steering wheel is loose !!",id: 4 );
       // Show the dialog only if the battery percentage is 20% and the dialog is not already shown
       _showDialog = true; // Update the state to prevent showing the dialog multiple times
       WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -142,7 +138,7 @@ class _CustomStatusBoxState extends State<CustomStatusBox> {
                       fontWeight: FontWeight.w600),
                 ),
                 Image.asset(
-                  (widget.statustext=="Hold")?"assets/icons/hold.png":"assets/icons/nothold.png",
+                  (widget.statustext=="Hold")?"assets/icons/no-alcohol.png":"assets/icons/alcohol.png",
                   height: 40,
                 )
               ],

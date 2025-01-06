@@ -1,4 +1,64 @@
+/*
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:safe_steer/constants/colors.dart';
+import 'package:safe_steer/widgets/custom_container.dart';
 
+import '../helper/alart_digonal.dart';
+*/
+
+/*
+class CustomHealthBox extends StatelessWidget {
+  const CustomHealthBox({
+    super.key, required this.healthtext,
+  });
+  final healthtext;
+  @override
+  Widget build(BuildContext context) {
+    return CustomContainer(
+      width: MediaQuery.of(context).size.width * 0.4,
+      height: MediaQuery.of(context).size.height * 0.121,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Health",
+              style: GoogleFonts.genos(
+                color: MyWhite1,
+                fontSize: 17.sp,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  style: GoogleFonts.genos(
+                      fontSize: 18,
+                      color: (healthtext == "Hold") ? MyGray2 : MyRed,
+                      fontWeight: FontWeight.w600),
+                  healthtext,
+                ),
+                Image.asset(
+                  (healthtext == "Hold")
+                      ? "assets/icons/no-alcohol.png"
+                      : "assets/icons/alcohol.png",
+                  height: 40,
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+*/
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:safe_steer/constants/colors.dart';
@@ -24,7 +84,7 @@ class _CustomHealthBoxState extends State<CustomHealthBox> {
   Widget build(BuildContext context) {
 
     if (widget.healthtext == "Drunk" && !_showDialog) {
-    //  NotificationService().showNotification(body: "Please, don’t drive as you are drunk.",title:"You Are Drunk !!",id: 1);
+      NotificationService().showNotification(body: "Please, don’t drive as you are drunk.",title:"You Are Drunk !!",id: 1);
       // Show the dialog only if the battery percentage is 20% and the dialog is not already shown
       _showDialog = true; // Update the state to prevent showing the dialog multiple times
       WidgetsBinding.instance!.addPostFrameCallback((_) {

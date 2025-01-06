@@ -1,8 +1,57 @@
+/*import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:kdgaugeview/kdgaugeview.dart';
+import 'package:safe_steer/constants/colors.dart';
 
+class SpeedoMeter extends StatefulWidget {
+  const SpeedoMeter({super.key , required this.value});
+  final  value;
+
+  @override
+  State<SpeedoMeter> createState() => _SpeedoMeterState();
+}
+
+class _SpeedoMeterState extends State<SpeedoMeter> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 100,
+      width: 100,
+      child:Text(widget.value),
+    );
+  }
+}*/
+/*
+* KdGaugeView(
+        minSpeed: 0,
+        maxSpeed: 240,
+        speed: double.parse(widget.value),
+        minMaxTextStyle: GoogleFonts.genos(
+          fontSize: 9.sp,
+          color: MyWhite1,
+          fontWeight: FontWeight.w400,
+        ),
+        speedTextStyle: GoogleFonts.genos(
+          fontSize: 22.sp,
+          color: MyWhite1,
+          fontWeight: FontWeight.w800,
+        ),
+        unitOfMeasurementTextStyle: GoogleFonts.genos(
+          fontSize: 12.sp,
+          color: MyBlueGradiant5,
+          fontWeight: FontWeight.w600,
+        ),
+        gaugeWidth: 1,
+        unitOfMeasurement: "kmh",
+        innerCirclePadding: 12,
+        activeGaugeColor: MyBlueGradiant2,
+        divisionCircleColors: Colors.white,
+        subDivisionCircleColors: MyBlueGradiant5,
+      ),*/
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:safe_steer/constants/colors.dart';
 
 class SpeedMeter extends StatefulWidget {
@@ -22,7 +71,7 @@ class _SpeedMeterState extends State<SpeedMeter>
   void initState() {
     super.initState();
     ctrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1500));
+        vsync: this, duration: Duration(milliseconds: 1500));
     anim = Tween<double>(begin: 0, end: 72).animate(ctrl);
     ctrl.forward();
   }
@@ -30,21 +79,21 @@ class _SpeedMeterState extends State<SpeedMeter>
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: SizedBox(
-          width: 500,
-          height: 500,
-          child: AnimatedBuilder(
-            builder: (context, child) {
-              return CustomPaint(
-                painter: MeterPainter(widget.speed),
-              );
-            },
-            animation: ctrl,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Container(
+            width: 500,
+            height: 500,
+            child: AnimatedBuilder(
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: MeterPainter(widget.speed),
+                );
+              },
+              animation: ctrl,
+            ),
           ),
         ),
-      ),
     );
   }
 }
@@ -63,32 +112,32 @@ class MeterPainter extends CustomPainter {
 
     final center = Offset(centerX, centerY);
     final rect =
-    Rect.fromCenter(center: center, width: w * 0.7, height: h * 0.7);
+        Rect.fromCenter(center: center, width: w * 0.7, height: h * 0.7);
     final largeRect =
-    Rect.fromCenter(center: center, width: w * 0.75, height: h * 0.75);
+        Rect.fromCenter(center: center, width: w * 0.75, height: h * 0.75);
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1
+      ..strokeWidth = 2
       ..color = MyWhite;
 
     final thickPaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
-      ..color = MyMenuColor;
+      ..strokeWidth = 4
+      ..color = MyGray;
     final startAngle = angleToRadian(135);
     final sweepAngle = angleToRadian(270);
 
     canvas.drawArc(rect, startAngle, sweepAngle, false, paint);
     canvas.drawArc(largeRect, startAngle, sweepAngle, false, thickPaint);
 
-    final pointedSweeepAngle = angleToRadian(270 * double.parse(percent) / 240);
+    final pointedSweeepAngle = angleToRadian(270 * double.parse(percent) / 100);
 
     canvas.drawArc(
       largeRect,
       startAngle,
       pointedSweeepAngle,
       false,
-      thickPaint..color = MyBlueGradiant2,
+      thickPaint..color = MyGradiantCancelCarButton2,
     );
 
     final radius = w / 2;
@@ -99,49 +148,37 @@ class MeterPainter extends CustomPainter {
       canvas.drawLine(start, end, paint);
     }
 
-    final highlights = List.generate(7, (index) => 135 + (45 * index));
+    final highlights = List.generate(11, (index) => 135 + (27 * index));
     for (int i = 0; i < highlights.length; i++) {
       var angle = highlights[i];
       final start = angleToOffset(center, angle, radius * 0.7);
-      final end = angleToOffset(center, angle, radius * 0.62);
+      final end = angleToOffset(center, angle, radius * 0.575);
       canvas.drawLine(start, end, paint);
 
       final tp = TextPainter(
-          text: TextSpan(text: "${(i*4) * 10}",style: GoogleFonts.genos(
-              fontSize: 10,
-              color: MyWhite,
-              fontWeight:FontWeight.normal
-          )), textDirection: TextDirection.ltr);
+          text: TextSpan(text: "${i * 10}",style: TextStyle(fontSize: 10)), textDirection: TextDirection.ltr);
       tp.layout();
       final textOffset = angleToOffset(center, angle, radius * 0.5);
       final centered =
-      Offset(textOffset.dx - tp.width / 2, textOffset.dy - tp.height / 2);
+          Offset(textOffset.dx - tp.width / 2, textOffset.dy - tp.height / 2);
       tp.paint(canvas, centered);
     }
 
     final tp = TextPainter(
         text: TextSpan(
-            text: percent,
-            style:  GoogleFonts.genos(
-                fontSize: 26,
-                color: MyWhite,
-                fontWeight: FontWeight.w700
-            ),
+            text: "${percent}",
+            style: TextStyle(fontSize: 30),
             children: [
               TextSpan(
                 text: "\nkm/h",
-                style:GoogleFonts.genos(
-                    fontSize: 12,
-                    color:MyBlueGradiant2,
-                    fontWeight: FontWeight.w600
-                ),
+                style: TextStyle(fontSize: 10),
               )
             ]),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr);
     tp.layout();
     final centered =
-    Offset(center.dx - tp.width / 2, center.dy - tp.height / 2);
+        Offset(center.dx - tp.width / 2, center.dy - tp.height / 2);
     tp.paint(canvas, centered);
   }
 

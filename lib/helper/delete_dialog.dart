@@ -18,8 +18,8 @@ class DeleteAlert extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: SizedBox(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Container(
             height: 150,
             width: 220,
             child: Column(
@@ -73,7 +73,7 @@ class DeleteAlert extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const WelcomeScreen(),
+                            builder: (context) => WelcomeScreen(),
                           ),
                         );
                       },

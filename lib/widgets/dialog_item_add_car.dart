@@ -9,7 +9,6 @@ class DialogItem extends StatelessWidget {
     required this.hintText,
     required this.focuseColor,
     required this.enableColor, this.onChanged, required this.value, this.validator,
-    this.initialValue
   });
   final String carLabel;
   final String hintText;
@@ -18,7 +17,6 @@ class DialogItem extends StatelessWidget {
   final void Function(String)? onChanged;
   final TextInputType value;
   final String? Function(String?)? validator;
-  final String? initialValue;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,7 +38,6 @@ class DialogItem extends StatelessWidget {
               validator: validator,
               onChanged:onChanged,
               keyboardType: value,
-              initialValue: initialValue,
               style: GoogleFonts.cairo(color: MyWhite),
               clipBehavior: Clip.none,
               cursorColor: MYBlueGradiant3,

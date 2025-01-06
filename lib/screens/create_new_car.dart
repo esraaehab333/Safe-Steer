@@ -1,16 +1,15 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:safe_steer/constants/colors.dart';
+import 'package:safe_steer/screens/car_choose_list.dart';
 import 'package:safe_steer/widgets/my_elevated_button.dart';
 import '../helper/show_snack_bar.dart';
 
 import '../widgets/dialog_item_add_car.dart';
 List<String> _ids = [];
 class CreateNewCar extends StatefulWidget {
-  final ScrollController controller;
-  const CreateNewCar({Key? key , required this.controller});
+  const CreateNewCar({Key? key});
 
   @override
   State<CreateNewCar> createState() => _CreateNewCarState();
@@ -20,24 +19,6 @@ class _CreateNewCarState extends State<CreateNewCar> {
   String? _name;
   String? _id;
   String? _speedLimit;
-  void scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.controller.hasClients) {
-        // Get the maximum scroll extent
-        final maxScrollExtent = widget.controller.position.maxScrollExtent;
-
-        // Calculate the scroll position to reach the end plus 1 item
-        final scrollPosition = maxScrollExtent + widget.controller.position.viewportDimension;
-
-        // Animate the scroll to the calculated position
-        widget.controller.animateTo(
-          scrollPosition,
-          duration: Duration(seconds: 1),
-          curve: Curves.easeIn,
-        );
-      }
-    });
-  }
 
   late DatabaseReference ref;
   @override
@@ -50,7 +31,6 @@ class _CreateNewCarState extends State<CreateNewCar> {
   Query dbref = FirebaseDatabase.instance.ref().child("Cars");
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.height *0.25);
     return Scaffold(
       backgroundColor: MyBlack,
       body: SingleChildScrollView(
@@ -66,8 +46,8 @@ class _CreateNewCarState extends State<CreateNewCar> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               SizedBox(
-                height: 30.h,
+              const SizedBox(
+                height: 30,
               ),
               IconButton(
                 onPressed: () {
@@ -79,7 +59,7 @@ class _CreateNewCarState extends State<CreateNewCar> {
                 ),
               ),
               Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 30.h),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -87,14 +67,14 @@ class _CreateNewCarState extends State<CreateNewCar> {
                       "Creation",
                       style: GoogleFonts.genos(
                           color: MyWhite,
-                          fontSize: 40.sp,
+                          fontSize: 40,
                           fontWeight: FontWeight.w700),
                     ),
                     Text(
                       "of new car",
                       style: GoogleFonts.cairo(
                           color: MyWhite,
-                          fontSize: 16.sp,
+                          fontSize: 16,
                           fontWeight: FontWeight.w300),
                     ),
                   ],
@@ -104,7 +84,7 @@ class _CreateNewCarState extends State<CreateNewCar> {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Image.asset(
                   "assets/images/carr.png",
-                  height:MediaQuery.of(context).size.height *0.2,
+                  height: 170,
                   width: MediaQuery.of(context).size.width,
                   alignment: Alignment.topRight,
                 ),
@@ -189,7 +169,6 @@ class _CreateNewCarState extends State<CreateNewCar> {
                     MyElevatedButton(
                       onPressed: () {
                         /////////////////////////////////////////////////////
-
                         print(_ids.toList());
                         if (key.currentState!.validate()) {
                           if(_ids.isEmpty == true){
@@ -233,7 +212,6 @@ class _CreateNewCarState extends State<CreateNewCar> {
                             }
                           }
                         }
-                        scrollToBottom();
                       },
                       borderRadius: BorderRadius.circular(23),
                       height: 40,
@@ -248,7 +226,7 @@ class _CreateNewCarState extends State<CreateNewCar> {
                       child: Text(
                         "create a new car",
                         style: GoogleFonts.cairo(
-                          fontSize: 15.sp,
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: MyBlueG,
                         ),
@@ -275,7 +253,7 @@ class _CreateNewCarState extends State<CreateNewCar> {
                       child: Text(
                         "cancel the changes",
                         style: GoogleFonts.cairo(
-                          fontSize: 15.sp,
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: MyWhite,
                         ),
