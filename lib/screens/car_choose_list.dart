@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+import 'dart:async';
+
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +9,8 @@ import 'package:safe_steer/screens/create_new_car.dart';
 import 'package:safe_steer/widgets/custom_car_card.dart';
 import 'package:safe_steer/widgets/custom_menu_drawer.dart';
 import 'package:firebase_database/firebase_database.dart';
+
+import '../helper/notification_services.dart';
 
 class CarChooseList extends StatefulWidget {
   const CarChooseList({super.key});
@@ -20,21 +24,89 @@ class _CarChooseListState extends State<CarChooseList> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController(); // Initialize ScrollController
+    _scrollController = ScrollController();
+    _listenForDataChanges(); // Initialize ScrollController
   }
 
   // Function to scroll to the top of the list
-  void scrollToTop() {
+  void scrollToBottom() {
     _scrollController.animateTo(
-      0.0, // Scroll to the top
-      duration: Duration(milliseconds: 500), // Animation duration
-      curve: Curves.easeInOut, // Animation curve
+      _scrollController.position.maxScrollExtent,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
     );
   }
 
   late DatabaseReference ref;
-  @override
   Query dbref = FirebaseDatabase.instance.ref().child("Cars");
+
+  late StreamSubscription subscription;
+  bool isDeviceConnected = false;
+  bool isAlertSet = false;
+  final databaseRef = FirebaseDatabase.instance.ref('Cars');
+  late StreamSubscription<DatabaseEvent> _dataSubscription;
+  List<String> childrenIds = [];
+  @override
+  void dispose() {
+    subscription.cancel();
+    _dataSubscription.cancel();
+    super.dispose();
+  }
+
+  void _listenForDataChanges() {
+    _dataSubscription = databaseRef.onValue.listen((event) {
+      final dataSnapshot = event.snapshot;
+      final data = event.snapshot.value as Map;
+      childrenIds = dataSnapshot.children.map((child) => child.key!).toList();
+      for (int i = 0; i < childrenIds.length; i++) {
+        final carData = data[childrenIds[i]];
+        final carName = carData["Name"];
+        final speed = int.parse(carData["Speed"]);
+        final speedLimit = int.parse(carData["SpeedLimit"]);
+        final status = carData["Status"];
+        final health = carData["Health"];
+        final heartbeat = int.parse(carData["Heartbeat"]);
+
+        if (speed >= speedLimit) {
+          NotificationService().showNotification(
+            body: "Speed is high !!",
+            title: carName,
+            id: generateUniqueNotificationId(i, "Speed"),
+          );
+        }
+        if (status == "Not Hold") {
+          NotificationService().showNotification(
+            body: "Please, hold the steering wheel.",
+            title: carName,
+            id: generateUniqueNotificationId(i, "Status"),
+          );
+        }
+        if (health == "Drunk") {
+          NotificationService().showNotification(
+            body: "Please, don’t drive as you are drunk.",
+            title: carName,
+            id: generateUniqueNotificationId(i, "Health"),
+          );
+        }
+        if (heartbeat >= 190) {
+          NotificationService().showNotification(
+            body: "Please, Be calm and breathe.",
+            title: carName,
+            id: generateUniqueNotificationId(i, "Heartbeat"),
+          );
+        }
+        // Update your UI with the new data
+        setState(() {
+          // Update your state variables
+        });
+      }
+    });
+  }
+
+  int generateUniqueNotificationId(int carIndex, String type) {
+    return carIndex * 10 + type.hashCode;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

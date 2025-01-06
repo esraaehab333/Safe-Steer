@@ -2,12 +2,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:safe_steer/constants/colors.dart';
-import 'package:safe_steer/screens/car_choose_list.dart';
 import 'package:safe_steer/widgets/my_elevated_button.dart';
 import '../helper/show_snack_bar.dart';
 
 import '../widgets/dialog_item_add_car.dart';
+
 List<String> _ids = [];
+
 class CreateNewCar extends StatefulWidget {
   const CreateNewCar({Key? key});
 
@@ -112,7 +113,8 @@ class _CreateNewCarState extends State<CreateNewCar> {
                         padding: const EdgeInsets.all(20),
                         child: Form(
                           key: key,
-                          child: Column(// noi space
+                          child: Column(
+                            // noi space
                             children: [
                               DialogItem(
                                 carLabel: 'Car Name',
@@ -155,7 +157,6 @@ class _CreateNewCarState extends State<CreateNewCar> {
                                   }
                                 },
                                 onChanged: (p0) {
-
                                   _speedLimit = p0;
                                 },
                                 value: TextInputType.number,
@@ -171,7 +172,7 @@ class _CreateNewCarState extends State<CreateNewCar> {
                         /////////////////////////////////////////////////////
                         print(_ids.toList());
                         if (key.currentState!.validate()) {
-                          if(_ids.isEmpty == true){
+                          if (_ids.isEmpty == true) {
                             Map<String, dynamic> cars = {
                               "Battery": "100",
                               "Heartbeat": "190",
@@ -187,24 +188,23 @@ class _CreateNewCarState extends State<CreateNewCar> {
 
                             showSnackBar(context, "Sucess creation");
                             Navigator.pop(context);
-                          }
-                          else{
+                          } else {
                             print(_id);
                             print(_ids.contains(_id));
-                            if(_ids.contains(_id) == true){
-                              showSnackBar(context, "this id has already taken");
-                            }
-                            else{
+                            if (_ids.contains(_id) == true) {
+                              showSnackBar(
+                                  context, "this id has already taken");
+                            } else {
                               _ids.add(_id!);
                               Map<String, dynamic> cars = {
-                                "Battery": "0",
-                                "Heartbeat": "0",
+                                "Battery": "100",
+                                "Heartbeat": "190",
                                 "Id": _id,
                                 "Name": _name,
                                 "SpeedLimit": _speedLimit,
-                                "Speed": "0",
-                                "Health": "0",
-                                "Status": "0",
+                                "Speed": "120",
+                                "Health": "Sober",
+                                "Status": "Hold",
                               };
                               ref.push().set(cars);
                               showSnackBar(context, "Sucess creation");
@@ -238,7 +238,7 @@ class _CreateNewCarState extends State<CreateNewCar> {
                     MyElevatedButton(
                       onPressed: () {
                         showSnackBar(context, "Changes Discard");
-                         Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                       borderRadius: BorderRadius.circular(23),
                       height: 40,

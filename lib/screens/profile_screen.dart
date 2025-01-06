@@ -130,7 +130,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
+                                    return Center(
+                                      child: SizedBox(
+                                        width: 50,
+                                        height: 50,
+                                        child: CircularProgressIndicator(
+                                          color: MyWhite,
+                                        ),
+                                      ),
+                                    );
                                   } else if (snapshot.hasError) {
                                     return Text('error has occures');
                                   } else {
@@ -139,8 +147,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       imageUrl: _image == null
                                           ? snapshot.data!
                                           : _image!.path,
-                                      placeholder: (context, url) =>
-                                          CircularProgressIndicator(),
+                                      placeholder: (context, url) => Center(
+                                        child: SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: CircularProgressIndicator(
+                                            color: MyWhite,
+                                          ),
+                                        ),
+                                      ),
                                       errorWidget: (context, url, error) =>
                                           Image.file(
                                         _image!,
@@ -333,7 +348,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState ==
                                                 ConnectionState.waiting) {
-                                              return CircularProgressIndicator();
+                                              return Center(
+                                                child: SizedBox(
+                                                  width: 50,
+                                                  height: 50,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: MyWhite,
+                                                  ),
+                                                ),
+                                              );
                                             } else if (snapshot.hasError) {
                                               print(snapshot.error);
                                               return Text(
@@ -345,7 +369,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     ? snapshot.data!
                                                     : _image!.path,
                                                 placeholder: (context, url) =>
-                                                    CircularProgressIndicator(),
+                                                    Center(
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: MyWhite,
+                                                    ),
+                                                  ),
+                                                ),
                                                 errorWidget:
                                                     (context, url, error) =>
                                                         Image.file(

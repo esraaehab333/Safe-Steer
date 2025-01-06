@@ -108,10 +108,10 @@ class _MonitorScreenState extends State<MonitorScreen> {
                         builder: (context) => Dialog(
                           backgroundColor: Colors.transparent,
                           child: Container(
-                            height: 300,
+                            height: 340,
                             width: 300,
                             decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
+                              borderRadius: BorderRadius.all(
                                 Radius.circular(25),
                               ),
                               gradient: LinearGradient(
@@ -125,10 +125,12 @@ class _MonitorScreenState extends State<MonitorScreen> {
                               child: Form(
                                 key: key,
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     DialogItem(
                                       carLabel: 'Car Name',
                                       hintText: 'enter car name',
+                                      initialValue: data["Name"],
                                       focuseColor: MyBlueText,
                                       enableColor: MYBlueGradiant3,
                                       validator: (p0) {
@@ -136,11 +138,15 @@ class _MonitorScreenState extends State<MonitorScreen> {
                                           return 'please enter car name';
                                         }
                                       },
+                                      onChanged: (p0) {
+                                        carName = p0;
+                                      },
                                       value: TextInputType.text,
                                     ),
                                     DialogItem(
                                       carLabel: 'Car ID',
                                       hintText: 'enter car id',
+                                      initialValue: data["Id"],
                                       focuseColor: MyBlueText,
                                       enableColor: MYBlueGradiant3,
                                       validator: (p0) {
@@ -148,17 +154,24 @@ class _MonitorScreenState extends State<MonitorScreen> {
                                           return 'please enter car id';
                                         }
                                       },
+                                      onChanged: (p0) {
+                                        carId = p0;
+                                      },
                                       value: TextInputType.number,
                                     ),
                                     DialogItem(
                                       carLabel: 'Speed Limit',
                                       hintText: 'enter car speed limit',
+                                      initialValue: data["SpeedLimit"],
                                       focuseColor: MyBlueText,
                                       enableColor: MYBlueGradiant3,
                                       validator: (p0) {
                                         if (p0 == null || p0.isEmpty) {
                                           return 'please enter speed limit';
                                         }
+                                      },
+                                      onChanged: (p0) {
+                                        speedlimit = p0;
                                       },
                                       value: TextInputType.number,
                                     ),
